@@ -37,7 +37,6 @@ public class Parser {
                 continue;
 
             final String flag = line.substring(0, 2);
-//            List<String> games = parse_game_name(line[2:]);
             List<String> games = parseGameName(line.substring(2));
 
             if (flag.equals("  "))
@@ -61,7 +60,7 @@ public class Parser {
 /*
     # Регулярка вытаскивает выражения вида: 1, 2, 3 или 1-3, или римские цифры: III, IV
     import re
-    PARSE_GAME_NAME_PATTERN = re.compile(r'(\d+(, ?\d+)+)|(\d+ *?- *?\d+)|([MDCLXVI]+(, ?[MDCLXVI]+)+)',
+    PARSE_GAME_NAME_PATTERN = re.compile(r'(\d+(, *?\d+)+)|(\d+ *?- *?\d+)|([MDCLXVI]+(, ?[MDCLXVI]+)+)',
                                          flags=re.IGNORECASE)
 
     def parse_game_name(game_name):
