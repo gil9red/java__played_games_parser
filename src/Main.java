@@ -1,3 +1,5 @@
+import sun.security.krb5.internal.PAEncTSEnc;
+
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -111,63 +113,17 @@ if __name__ == '__main__':
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Path path = FileSystems.getDefault().getPath("2017-06-08.txt");
-        byte[] bytes = Files.readAllBytes(path);
-        String text = new String(bytes);
 
+        System.out.println(Parser.parseGameName("Resident Evil 4, 5, 6"));
+        System.out.println(Parser.parseGameName("Resident Evil 1-3"));
 
-        final String FINISHED_GAME = "FINISHED_GAME";
-        final String NOT_FINISHED_GAME = "NOT_FINISHED_GAME";
-        final String FINISHED_WATCHED = "FINISHED_WATCHED";
-        final String NOT_FINISHED_WATCHED = "NOT_FINISHED_WATCHED";
-
-        Map<String, Map<String, List<String>>> platforms = new LinkedHashMap<>();
-        Map<String, List<String>> platform = null;
-
-        for (String line : text.split("\n")) {
-            // Analog rtrim / strip
-            line = line.replaceAll("\\s+$","");
-            if (line.isEmpty())
-                continue;
-
-            boolean hasFlag1 = " -@".contains(String.valueOf(line.charAt(0)));
-            boolean hasFlag2 = " -@".contains(String.valueOf(line.charAt(1)));
-
-            if (!hasFlag1 && !hasFlag2 && line.endsWith(":")) {
-                String platformName = line.substring(0, line.length() - 1);
-
-                platform = new LinkedHashMap<>();
-                platform.put(FINISHED_GAME, new LinkedList<>());
-                platform.put(NOT_FINISHED_GAME, new LinkedList<>());
-                platform.put(FINISHED_WATCHED, new LinkedList<>());
-                platform.put(NOT_FINISHED_WATCHED, new LinkedList<>());
-
-                platforms.put(platformName, platform);
-
-                continue;
-            }
-
-            if (platform == null)
-                continue;
-
-            final String flag = line.substring(0, 2);
-//            List<String> games = parse_game_name(line[2:]);
-            List<String> games = Arrays.asList(line.substring(2));
-
-            if (flag.equals("  "))
-                platform.get(FINISHED_GAME).addAll(games);
-
-            else if (flag.equals(" -") || flag.equals("- "))
-                platform.get(NOT_FINISHED_GAME).addAll(games);
-
-            else if (flag.equals(" @") || flag.equals("@ "))
-                platform.get(FINISHED_WATCHED).addAll(games);
-
-            else if (flag.equals("@-") || flag.equals("-@"))
-                platform.get(NOT_FINISHED_WATCHED).addAll(games);
-        }
-
-        System.out.println(platforms.keySet());
-        System.out.println(platforms);
+//        Path path = FileSystems.getDefault().getPath("2017-06-08.txt");
+//        byte[] bytes = Files.readAllBytes(path);
+//        String text = new String(bytes);
+//
+//        Map<String, Map<String, List<String>>> platforms = Parser.parse(text);
+//
+//        System.out.println(platforms.keySet());
+//        System.out.println(platforms);
     }
 }
