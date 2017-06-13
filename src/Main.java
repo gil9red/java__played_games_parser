@@ -12,6 +12,16 @@ public class Main {
 
         Map<String, Map<String, List<String>>> platforms = Parser.parse(text);
 
+        System.out.println("Platforms: " + platforms.size());
+
+        int totalGames = 0;
+        for (Map<String, List<String>> categories : platforms.values()) {
+            for (List games : categories.values()) {
+                totalGames += games.size();
+            }
+        }
+        System.out.println("Games: " + totalGames);
+        System.out.println();
         System.out.println(platforms.keySet());
         System.out.println(platforms);
 
