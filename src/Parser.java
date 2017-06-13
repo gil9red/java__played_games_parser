@@ -62,7 +62,7 @@ public class Parser {
         return platforms;
     }
 
-    public static List<String> parseGameName(String gameName) {
+    private static List<String> parseGameName(String gameName) {
         Matcher match = PARSE_GAME_NAME_PATTERN.matcher(gameName);
         if (!match.find()) {
             return Collections.singletonList(gameName);
