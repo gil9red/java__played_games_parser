@@ -23,8 +23,5 @@ public class Main {
         System.out.println();
         System.out.println(platforms.keySet());
         System.out.println(platforms);
-
-//        import json
-//        json.dump(platforms, open('games.json', mode='w', encoding='utf-8'), ensure_ascii=False, indent=4)
     }
 }
