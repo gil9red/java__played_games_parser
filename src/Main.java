@@ -10,6 +10,7 @@ public class Main {
         System.out.println(Parser.parseGameName("Resident Evil 4, 5, 6"));
         System.out.println(Parser.parseGameName("Resident Evil 4,  5,   6"));
         System.out.println(Parser.parseGameName("Resident Evil 1-3"));
+        System.out.println(Parser.parseGameName("Resident Evil 1-3-4"));
         System.out.println(Parser.parseGameName("Resident Evil 1 -  3"));
         System.out.println(Parser.parseGameName("Heroes of Might and Magic III, IV"));
 

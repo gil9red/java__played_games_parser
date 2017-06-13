@@ -17,8 +17,9 @@ public class Parser {
         for (String line : text.split("\n")) {
             // Analog rtrim / strip
             line = line.replaceAll("\\s+$","");
-            if (line.isEmpty())
+            if (line.isEmpty()) {
                 continue;
+            }
 
             boolean hasFlag1 = " -@".contains(String.valueOf(line.charAt(0)));
             boolean hasFlag2 = " -@".contains(String.valueOf(line.charAt(1)));
@@ -37,75 +38,32 @@ public class Parser {
                 continue;
             }
 
-            if (platform == null)
+            if (platform == null) {
                 continue;
+            }
 
             final String flag = line.substring(0, 2);
             List<String> games = parseGameName(line.substring(2));
 
-            if (flag.equals("  "))
+            if (flag.equals("  ")) {
                 platform.get(FINISHED_GAME).addAll(games);
 
-            else if (flag.equals(" -") || flag.equals("- "))
+            } else if (flag.equals(" -") || flag.equals("- ")) {
                 platform.get(NOT_FINISHED_GAME).addAll(games);
 
-            else if (flag.equals(" @") || flag.equals("@ "))
+            } else if (flag.equals(" @") || flag.equals("@ ")) {
                 platform.get(FINISHED_WATCHED).addAll(games);
 
-            else if (flag.equals("@-") || flag.equals("-@"))
+            } else if (flag.equals("@-") || flag.equals("-@")) {
                 platform.get(NOT_FINISHED_WATCHED).addAll(games);
+            }
         }
 
         return platforms;
     }
 
     public static List<String> parseGameName(String gameName) {
-/*
-    # Регулярка вытаскивает выражения вида: 1, 2, 3 или 1-3, или римские цифры: III, IV
-    import re
-    PARSE_GAME_NAME_PATTERN = re.compile(r'(\d+(, *?\d+)+)|(\d+ *?- *?\d+)|([MDCLXVI]+(, ?[MDCLXVI]+)+)',
-                                         flags=re.IGNORECASE)
-
-    def parse_game_name(game_name):
-        """
-        Функция принимает название игры и пытается разобрать его, после возвращает список названий.
-        Т.к. в названии игры может находиться указание ее частей, то функция разберет их.
-
-        Пример:
-            "Resident Evil 4, 5, 6" станет:
-                ["Resident Evil 4", "Resident Evil 5", "Resident Evil 6"]
-
-            "Resident Evil 1-3" станет:
-                ["Resident Evil", "Resident Evil 2", "Resident Evil 3"]
-
-        """
-
-        match = PARSE_GAME_NAME_PATTERN.search(game_name)
-        if match is None:
-            return [game_name]
-
-        seq_str = match.group(0)
-        short_name = game_name.replace(seq_str, '').strip()
-
-        if ',' in seq_str:
-            seq = seq_str.replace(' ', '').split(',')
-
-        elif '-' in seq_str:
-            seq = seq_str.replace(' ', '').split('-')
-            if len(seq) == 2:
-                seq = tuple(map(int, seq))
-                seq = tuple(range(seq[0], seq[1] + 1))
-        else:
-            return [game_name]
-
-        # Сразу проверяем номер игры в серии и если она первая, то не добавляем в названии ее номер
-        return [short_name if str(num) == '1' else '{} {}'.format(short_name, num) for num in seq]
-*/
-
-        System.out.println();
-        System.out.println(gameName);
         Matcher match = PARSE_GAME_NAME_PATTERN.matcher(gameName);
-
         if (!match.find()) {
             return Collections.singletonList(gameName);
         }
@@ -113,13 +71,44 @@ public class Parser {
         String seqStr = match.group();
 
         // "Resident Evil 4,  5,   6" -> "Resident Evil"
-        String shortName = gameName.replace(seqStr, "").trim();
+        // For not valid "Trollface Quest 1-7-8" -> "Trollface Quest"
+        int index = gameName.indexOf(seqStr);
+        String baseName = gameName.substring(0, index).trim();
 
         // "4,  5,   6" -> "4,5,6"
         seqStr = seqStr.replace(" ", "");
 
-        System.out.println(shortName + " " + seqStr);
+        List<String> seq = new ArrayList<>();
 
-        return Arrays.asList(gameName);
+        if (seqStr.contains(",")) {
+            Collections.addAll(seq, seqStr.split(","));
+
+        } else if (seqStr.contains("-")) {
+            // ["1", "7"] -> ["1", "2", "3", "4", "5", "6", "7"]
+            String[] parts = seqStr.split("-");
+
+            int a = Integer.parseInt(parts[0]);
+            int b = Integer.parseInt(parts[1]);
+
+            for (; a <= b; a++) {
+                seq.add(String.valueOf(a));
+            }
+
+        } else {
+            return Collections.singletonList(gameName);
+        }
+
+        List<String> games = new ArrayList<>();
+
+        for (String num : seq) {
+            if (num.equals("1")) {
+                games.add(baseName);
+            } else {
+                // Example: "Resident Evil" + " " + "4"
+                games.add(baseName + " " + num);
+            }
+        }
+
+        return games;
     }
 }
