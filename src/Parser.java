@@ -2,14 +2,24 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <p>Класс для парсинга списка игр.</p>
+ */
 public class Parser {
     public final static String FINISHED_GAME = "FINISHED_GAME";
     public final static String NOT_FINISHED_GAME = "NOT_FINISHED_GAME";
     public final static String FINISHED_WATCHED = "FINISHED_WATCHED";
     public final static String NOT_FINISHED_WATCHED = "NOT_FINISHED_WATCHED";
 
+    // Регулярка вытаскивает выражения вида: 1, 2, 3 или 1-3, или римские цифры: III, IV
     private final static Pattern PARSE_GAME_NAME_PATTERN = Pattern.compile("(\\d+(, *?\\d+)+)|(\\d+ *?- *?\\d+)|([MDCLXVI]+(, ?[MDCLXVI]+)+)", Pattern.CASE_INSENSITIVE);
 
+    /**
+     * <p>Функция парсит переданный текст с списком игр.</p>
+     *
+     * @param text Текст с списком игр
+     * @return Словарь платформ с словарем категорий с списком игр.
+     */
     public static Map<String, Map<String, List<String>>> parse(String text) {
         Map<String, Map<String, List<String>>> platforms = new LinkedHashMap<>();
         Map<String, List<String>> platform = null;
@@ -62,6 +72,21 @@ public class Parser {
         return platforms;
     }
 
+    /**
+     * <p>Функция принимает название игры и пытается разобрать его, после возвращает список названий.</p>
+     * <p>У некоторых игр в названии может указываться ее части или диапазон частей, поэтому для правильного
+     * составления списка игр такие случаи нужно обрабатывать.</p>
+     * <p></p>
+     * <p>Пример:</p>
+     * <pre>
+     * "Resident Evil 4, 5, 6" -> ["Resident Evil 4", "Resident Evil 5", "Resident Evil 6"]
+     * "Resident Evil 1-3"     -> ["Resident Evil", "Resident Evil 2", "Resident Evil 3"]
+     * "Resident Evil 4"       -> ["Resident Evil 4"]
+     * </pre>
+     *
+     * @param gameName Вертикаль, на которой находится фигура (1=a, 8=h)
+     * @return Список названий игр.
+     */
     private static List<String> parseGameName(String gameName) {
         Matcher match = PARSE_GAME_NAME_PATTERN.matcher(gameName);
         if (!match.find()) {
