@@ -55,17 +55,35 @@ public class Parser {
             final String flag = line.substring(0, 2);
             List<String> games = parseGameName(line.substring(2));
 
+            String categoryName = null;
+
             if (flag.equals("  ")) {
-                platform.get(FINISHED_GAME).addAll(games);
+                categoryName = FINISHED_GAME;
 
             } else if (flag.equals(" -") || flag.equals("- ")) {
-                platform.get(NOT_FINISHED_GAME).addAll(games);
+                categoryName = NOT_FINISHED_GAME;
 
             } else if (flag.equals(" @") || flag.equals("@ ")) {
-                platform.get(FINISHED_WATCHED).addAll(games);
+                categoryName = FINISHED_WATCHED;
 
             } else if (flag.equals("@-") || flag.equals("-@")) {
-                platform.get(NOT_FINISHED_WATCHED).addAll(games);
+                categoryName = NOT_FINISHED_WATCHED;
+            }
+
+            if (categoryName == null) {
+                System.out.println(String.format("Странный формат строки: \"%s\"", line));
+                continue;
+            }
+
+            List<String> category = platform.get(categoryName);
+
+            for (String game : games) {
+                if (category.contains(game)) {
+                    System.out.println(String.format("Предотвращено добавление дубликата игры \"%s\"", game));
+                    continue;
+                }
+
+                category.add(game);
             }
         }
 
