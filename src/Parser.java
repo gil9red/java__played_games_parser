@@ -53,8 +53,6 @@ public class Parser {
             }
 
             final String flag = line.substring(0, 2);
-            List<String> games = parseGameName(line.substring(2));
-
             String categoryName = null;
 
             if (flag.equals("  ")) {
@@ -77,6 +75,7 @@ public class Parser {
 
             List<String> category = platform.get(categoryName);
 
+            List<String> games = parseGameName(line.substring(2));
             for (String game : games) {
                 if (category.contains(game)) {
                     System.out.println(String.format("Предотвращено добавление дубликата игры \"%s\"", game));
