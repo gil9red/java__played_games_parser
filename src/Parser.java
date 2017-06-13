@@ -101,7 +101,7 @@ public class Parser {
      * "Resident Evil 4"       -> ["Resident Evil 4"]
      * </pre>
      *
-     * @param gameName Вертикаль, на которой находится фигура (1=a, 8=h)
+     * @param gameName Название игры
      * @return Список названий игр.
      */
     private static List<String> parseGameName(String gameName) {
