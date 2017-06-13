@@ -11,7 +11,6 @@ public class Main {
         String text = new String(bytes);
 
         Map<String, Map<String, List<String>>> platforms = Parser.parse(text);
-
         System.out.println("Platforms: " + platforms.size());
 
         int totalGames = 0;
