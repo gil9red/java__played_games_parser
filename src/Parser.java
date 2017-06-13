@@ -84,7 +84,7 @@ public class Parser {
             Collections.addAll(seq, seqStr.split(","));
 
         } else if (seqStr.contains("-")) {
-            // ["1", "7"] -> ["1", "2", "3", "4", "5", "6", "7"]
+            // "1-7" -> ["1", "7"] -> ["1", "2", "3", "4", "5", "6", "7"]
             String[] parts = seqStr.split("-");
 
             int a = Integer.parseInt(parts[0]);
