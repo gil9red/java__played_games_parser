@@ -1,10 +1,14 @@
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Parser {
     public final static String FINISHED_GAME = "FINISHED_GAME";
     public final static String NOT_FINISHED_GAME = "NOT_FINISHED_GAME";
     public final static String FINISHED_WATCHED = "FINISHED_WATCHED";
     public final static String NOT_FINISHED_WATCHED = "NOT_FINISHED_WATCHED";
+
+    private final static Pattern PARSE_GAME_NAME_PATTERN = Pattern.compile("(\\d+(, *?\\d+)+)|(\\d+ *?- *?\\d+)|([MDCLXVI]+(, ?[MDCLXVI]+)+)", Pattern.CASE_INSENSITIVE);
 
     public static Map<String, Map<String, List<String>>> parse(String text) {
         Map<String, Map<String, List<String>>> platforms = new LinkedHashMap<>();
@@ -55,8 +59,7 @@ public class Parser {
         return platforms;
     }
 
-    public static List<String> parseGameName(String game) {
-
+    public static List<String> parseGameName(String gameName) {
 /*
     # Регулярка вытаскивает выражения вида: 1, 2, 3 или 1-3, или римские цифры: III, IV
     import re
@@ -99,6 +102,24 @@ public class Parser {
         return [short_name if str(num) == '1' else '{} {}'.format(short_name, num) for num in seq]
 */
 
-        return Arrays.asList(game);
+        System.out.println();
+        System.out.println(gameName);
+        Matcher match = PARSE_GAME_NAME_PATTERN.matcher(gameName);
+
+        if (!match.find()) {
+            return Collections.singletonList(gameName);
+        }
+
+        String seqStr = match.group();
+
+        // "Resident Evil 4,  5,   6" -> "Resident Evil"
+        String shortName = gameName.replace(seqStr, "").trim();
+
+        // "4,  5,   6" -> "4,5,6"
+        seqStr = seqStr.replace(" ", "");
+
+        System.out.println(shortName + " " + seqStr);
+
+        return Arrays.asList(gameName);
     }
 }

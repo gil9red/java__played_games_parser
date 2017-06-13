@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        System.out.println(Parser.parseGameName("Resident Evil 4"));
         System.out.println(Parser.parseGameName("Resident Evil 4, 5, 6"));
         System.out.println(Parser.parseGameName("Resident Evil 4,  5,   6"));
         System.out.println(Parser.parseGameName("Resident Evil 1-3"));
