@@ -75,8 +75,8 @@ public class Parser {
 
             List<String> category = platform.get(categoryName);
 
-            List<String> games = parseGameName(line.substring(2));
-            for (String game : games) {
+            String gameName = line.substring(2);
+            for (String game : parseGameName(gameName)) {
                 if (category.contains(game)) {
                     System.out.println(String.format("Предотвращено добавление дубликата игры \"%s\"", game));
                     continue;
